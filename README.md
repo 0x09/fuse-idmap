@@ -54,3 +54,7 @@ These more specific mappings take priority over the user and group mappings spec
 
 # libidmap
 For filesystems not wanting the (minimal) overhead of a module, the same id mapping functions are available by including idmap.h and linking with libidmap.a. See the fuse-idmap module code for reference usage.
+
+# Similar Projects
+
+* https://github.com/bAndie91/libnss_idmap
