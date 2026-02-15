@@ -12,6 +12,9 @@ ifeq ($(OS), Darwin)
 		FUSE_LIB = -losxfuse
 	else ifeq ($(shell [ -e /usr/local/lib/libfuse.dylib ] && echo 1), 1)
 		FUSE_FLAGS += -I/usr/local/include
+	else ifeq ($(shell [ -e /usr/local/lib/libfuse-t.dylib ] && echo 1), 1)
+		FUSE_FLAGS += -I/usr/local/include/fuse
+		FUSE_LIB = -lfuse-t
 	endif
 else
 	CFLAGS := -fPIC $(CFLAGS)
