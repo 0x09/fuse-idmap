@@ -1,6 +1,5 @@
 /*
  * fuse-idmap - FUSE module for inter-system user/group ID mapping
- * Copyright 2013-2017 0x09.net.
  */
 
 #include <stdlib.h>

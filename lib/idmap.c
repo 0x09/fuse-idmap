@@ -1,6 +1,5 @@
 /*
  * idmap - Map user/group IDs between systems
- * Copyright 2013-2017 0x09.net.
  */
 
 #include <stdlib.h>

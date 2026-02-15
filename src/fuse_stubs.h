@@ -1,6 +1,5 @@
 /*
  * fuse-idmap - FUSE module for inter-system user/group ID mapping
- * Copyright 2013-2017 0x09.net.
  */
 
 // FUSE modules must implement every operation they can support, but we only need to intercept getattr/chown
