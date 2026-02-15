@@ -1,6 +1,3 @@
-CC ?= cc
-AR ?= ar
-RANLIB ?= ranlib
 INSTALL ?= install
 PREFIX ?= /usr
 CFLAGS := -O3 -std=gnu11 $(CFLAGS)
@@ -14,24 +11,23 @@ else
 	CFLAGS := -fPIC $(CFLAGS)
 endif
 
+CPPFLAGS := -Iinclude $(FUSE_FLAGS) $(CPPFLAGS)
+
 .PHONY: all clean install uninstall
 
 all: libidmap.a libfusemod_idmap.so
-
-%.o: %.c
-	$(CC) $(CFLAGS) -Iinclude/ $(FUSE_FLAGS) -c -o $*.o $^
 
 libidmap.a: lib/idmap.o
 	$(AR) rcs $@ $^
 
 libfusemod_idmap.so: lib/idmap.o src/idmapfuse.o
-	$(CC) $(CFLAGS) -shared -o $@ $^ $(FUSE_LIB) -lpthread
+	$(CC) $(LDFLAGS) -shared -o $@ $^ $(FUSE_LIB) $(LDLIBS) -lpthread
 
 clean:
-	rm -f lib/idmap.o libidmap.a src/idmapfuse.o libfusemod_idmap.so
+	$(RM) lib/idmap.o libidmap.a src/idmapfuse.o libfusemod_idmap.so
 
 install: libfusemod_idmap.so
-	install $< $(PREFIX)/lib/
+	$(INSTALL) $< $(PREFIX)/lib/
 
 uninstall:
-	rm -f $(PREFIX)/lib/libfusemod_idmap.so
+	$(RM) $(PREFIX)/lib/libfusemod_idmap.so
