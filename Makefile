@@ -1,6 +1,6 @@
 INSTALL ?= install
 PREFIX ?= /usr
-CFLAGS := -O3 -std=gnu11 $(CFLAGS)
+CFLAGS := -O3 -std=c11 -Wall -pedantic -D_POSIX_C_SOURCE=200809L $(CFLAGS)
 
 FUSE_FLAGS = -DFUSE_USE_VERSION=28 -D_FILE_OFFSET_BITS=64
 FUSE_LIB = -lfuse
