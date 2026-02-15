@@ -2,16 +2,16 @@ INSTALL ?= install
 PREFIX ?= /usr
 CFLAGS := -O3 -std=c11 -Wall -Werror -pedantic -D_POSIX_C_SOURCE=200809L $(CFLAGS)
 
-FUSE_FLAGS = -DFUSE_USE_VERSION=28 -D_FILE_OFFSET_BITS=64
-FUSE_LIB = -lfuse
+FUSE_FLAGS = -D_FILE_OFFSET_BITS=64
 OS=$(shell uname)
 ifeq ($(OS), Darwin)
 	FUSE_LDFLAGS = -L/usr/local/lib
 	ifeq ($(shell [ -e /usr/local/lib/libosxfuse.dylib ] && echo 1), 1)
 		FUSE_FLAGS += -I/usr/local/include/osxfuse
 		FUSE_LIB = -losxfuse
-	else ifeq ($(shell [ -e /usr/local/lib/libfuse.dylib ] && echo 1), 1)
+	else ifeq ($(shell [ -e /usr/local/lib/libfuse.dylib -o -e /usr/local/lib/libfuse3.dylib ] && echo 1), 1)
 		FUSE_FLAGS += -I/usr/local/include
+		FUSE_FLAGS += -Wno-language-extension-token -D_DARWIN_C_SOURCE
 	else ifeq ($(shell [ -e /usr/local/lib/libfuse-t.dylib ] && echo 1), 1)
 		FUSE_FLAGS += -I/usr/local/include/fuse
 		FUSE_LIB = -lfuse-t
@@ -25,6 +25,14 @@ ifneq ($(filter $(OS),FreeBSD DragonFly),)
 else ifeq ($(OS), NetBSD)
 	FUSE_FLAGS += -I/usr/pkg/include
 	FUSE_LDFLAGS = -L/usr/pkg/lib/ -Wl,-R/usr/pkg/lib
+endif
+
+ifeq ($(shell echo | $(CC) $(FUSE_FLAGS) -DFUSE_USE_VERSION=30 -include fuse3/fuse.h -xc -fsyntax-only - > /dev/null 2> /dev/null; echo $$?), 0)
+	FUSE_FLAGS += -DFUSE_USE_VERSION=35
+	FUSE_LIB ?= -lfuse3
+else
+	FUSE_FLAGS += -DFUSE_USE_VERSION=29
+	FUSE_LIB ?= -lfuse
 endif
 
 CPPFLAGS := -Iinclude $(FUSE_FLAGS) $(CPPFLAGS)
