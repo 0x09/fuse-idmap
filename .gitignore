@@ -1,2 +1,7 @@
 *.o
 *.a
+*.so
+compile_commands.json
+.vagrant
+Vagrantfile
+*.tar.gz
