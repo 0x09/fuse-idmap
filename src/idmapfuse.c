@@ -156,4 +156,4 @@ static struct fuse_fs* idmapfuse_new(struct fuse_args* args, struct fuse_fs* nex
 	return NULL;
 }
 
-FUSE_REGISTER_MODULE(idmap, idmapfuse_new);
+FUSE_REGISTER_MODULE(idmap, idmapfuse_new)
