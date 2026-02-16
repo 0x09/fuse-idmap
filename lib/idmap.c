@@ -56,7 +56,7 @@ static inline bool read_ids(FILE* f, id_t (**ids)[2], size_t* size) {
 	while(fscanf(f, "%u %u\n", &from_id, &to_id) == 2)
 		if(!add_id(from_id, to_id, ids, size))
 			return false;
-	return true;
+	return feof(f);
 }
 
 bool idmap_read_users(struct idmap* map, FILE* mapfile) {
@@ -72,7 +72,7 @@ bool idmap_read_user_group_pairs(struct idmap* map, FILE* mapfile) {
 	while(fscanf(mapfile, "%u:%u %u:%u\n", &from_user, &from_group, &to_user, &to_group) == 4)
 		if(!idmap_add_user_group_pair(map, from_user, from_group, to_user, to_group))
 			return false;
-	return true;
+	return feof(mapfile);
 }
 
 bool idmap_read_mapfiles(struct idmap* map, const char* user_map, const char* group_map, const char* user_group_map) {
