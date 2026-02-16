@@ -43,12 +43,12 @@ LDFLAGS := $(FUSE_LDFLAGS) $(LDFLAGS)
 
 .PHONY: all clean install uninstall
 
-all: libidmap.a libfusemod_idmap.so
+all: libfusemod_idmap.so
 
 libidmap.a: lib/idmap.o
 	$(AR) rcs $@ $^
 
-libfusemod_idmap.so: lib/idmap.o src/idmapfuse.o
+libfusemod_idmap.so: libidmap.a src/idmapfuse.o
 	$(CC) $(LDFLAGS) -shared -o $@ $^ $(FUSE_LIB) $(LDLIBS)
 
 clean:
