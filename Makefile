@@ -38,8 +38,10 @@ ifeq ($(shell echo 'struct statx _;' | $(CC) $(CFLAGS) -include sys/stat.h -xc -
 	FUSE_FLAGS += -DHAVE_STATX
 endif
 
-CPPFLAGS := -Iinclude $(FUSE_FLAGS) $(CPPFLAGS)
+CPPFLAGS := -Iinclude $(FUSE_FLAGS) -MMD -MP $(CPPFLAGS)
 LDFLAGS := $(FUSE_LDFLAGS) $(LDFLAGS)
+
+DEPS=lib/idmap.d src/idmapfise.d
 
 .PHONY: all clean install uninstall
 
@@ -52,10 +54,12 @@ libfusemod_idmap.so: libidmap.a src/idmapfuse.o
 	$(CC) $(LDFLAGS) -shared -o $@ $^ $(FUSE_LIB) $(LDLIBS)
 
 clean:
-	$(RM) lib/idmap.o libidmap.a src/idmapfuse.o libfusemod_idmap.so
+	$(RM) lib/idmap.o libidmap.a src/idmapfuse.o libfusemod_idmap.so $(DEPS)
 
 install: libfusemod_idmap.so
 	$(INSTALL) $< $(PREFIX)/lib/
 
 uninstall:
 	$(RM) $(PREFIX)/lib/libfusemod_idmap.so
+
+-include $(DEPS)
