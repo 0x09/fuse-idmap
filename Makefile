@@ -49,7 +49,7 @@ libidmap.a: lib/idmap.o
 	$(AR) rcs $@ $^
 
 libfusemod_idmap.so: lib/idmap.o src/idmapfuse.o
-	$(CC) $(LDFLAGS) -shared -o $@ $^ $(FUSE_LIB) $(LDLIBS) -lpthread
+	$(CC) $(LDFLAGS) -shared -o $@ $^ $(FUSE_LIB) $(LDLIBS)
 
 clean:
 	$(RM) lib/idmap.o libidmap.a src/idmapfuse.o libfusemod_idmap.so
