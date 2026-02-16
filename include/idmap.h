@@ -28,4 +28,3 @@ bool idmap_read_mapfiles(struct idmap*, const char* user_map, const char* group_
 void idmap_map(struct idmap*, uid_t* restrict uid, gid_t* restrict gid, bool invert);
 
 #endif
-
