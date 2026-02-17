@@ -11,6 +11,20 @@ static int idmapfuse_setvolname(const char *volname) {
 	return fuse_fs_setvolname(fs, volname);
 }
 
+#if FUSE_VERSION < 30
+static int idmapfuse_chflags(const char *path, uint32_t flags) {
+	struct fuse_fs *fs = ((struct idmapfuse*)fuse_get_context()->private_data)->next;
+	return fuse_fs_chflags(fs, path, flags);
+}
+#else
+static int idmapfuse_chflags(const char *path, struct fuse_file_info *fi, uint32_t flags) {
+	struct fuse_fs *fs = ((struct idmapfuse*)fuse_get_context()->private_data)->next;
+	return fuse_fs_chflags(fs, path, fi, flags);
+}
+#endif
+#endif
+
+#if (defined(__APPLE__) && FUSE_VERSION < 30) || FUSE_DARWIN_ENABLE_EXTENSIONS
 static int idmapfuse_setxattr(const char *path, const char *name, const char *value, size_t size, int flags, uint32_t position) {
 	struct fuse_fs *fs = ((struct idmapfuse*)fuse_get_context()->private_data)->next;
 	return fuse_fs_setxattr(fs, path, name, value, size, flags, position);
@@ -35,11 +49,6 @@ static int idmapfuse_fsetattr_x(const char *path, struct setattr_x *attr, struct
 static int idmapfuse_exchange(const char *oldpath, const char *newpath, unsigned long flags) {
 	struct fuse_fs *fs = ((struct idmapfuse*)fuse_get_context()->private_data)->next;
 	return fuse_fs_exchange(fs, oldpath, newpath, flags);
-}
-
-static int idmapfuse_chflags(const char *path, uint32_t flags) {
-	struct fuse_fs *fs = ((struct idmapfuse*)fuse_get_context()->private_data)->next;
-	return fuse_fs_chflags(fs, path, flags);
 }
 
 static int idmapfuse_getxtimes(const char *path, struct timespec *bkuptime, struct timespec *crtime) {
@@ -67,17 +76,12 @@ static int idmapfuse_statfs(const char *path, struct statvfs *buf) {
 	return fuse_fs_statfs(fs, path, buf);
 }
 #else /* FUSE_VERSION >= 30 */
-static int idmapfuse_chflags(const char *path, struct fuse_file_info *fi, uint32_t flags) {
-	struct fuse_fs *fs = ((struct idmapfuse*)fuse_get_context()->private_data)->next;
-	return fuse_fs_chflags(fs, path, fi, flags);
-}
-
 static int idmapfuse_statfs(const char *path, struct statfs *buf) {
 	struct fuse_fs *fs = ((struct idmapfuse*)fuse_get_context()->private_data)->next;
 	return fuse_fs_statfs(fs, path, buf);
 }
 #endif
-#else /* !__APPLE__ */
+#else
 static int idmapfuse_statfs(const char *path, struct statvfs *buf) {
 	struct fuse_fs *fs = ((struct idmapfuse*)fuse_get_context()->private_data)->next;
 	return fuse_fs_statfs(fs, path, buf);
@@ -92,7 +96,7 @@ static int idmapfuse_getxattr(const char *path, const char *name, char *value, s
 	struct fuse_fs *fs = ((struct idmapfuse*)fuse_get_context()->private_data)->next;
 	return fuse_fs_getxattr(fs, path, name, value, size);
 }
-#endif /* __APPLE__ */
+#endif
 
 
 #if FUSE_VERSION < 30

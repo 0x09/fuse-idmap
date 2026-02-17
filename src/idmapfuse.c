@@ -13,7 +13,13 @@
 #if FUSE_USE_VERSION < 30
 #include <fuse.h>
 #else
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdollar-in-identifier-extension"
 #include <fuse3/fuse.h>
+#pragma clang diagnostic pop
+#pragma GCC diagnostic pop
 #endif
 
 #include "idmap.h"
