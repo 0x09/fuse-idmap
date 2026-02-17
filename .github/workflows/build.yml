@@ -23,7 +23,6 @@ jobs:
         run: |
           brew update
           brew install --cask macfuse
-          brew install libarchive
       - name: Build
         run: make
   build-freebsd:
