@@ -27,29 +27,37 @@ jobs:
         run: make
   build-freebsd:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: cpa.sh {0}
     steps:
       - uses: actions/checkout@v7
-      - name: Build
+      - name: Start VM
         uses: cross-platform-actions/action@v1.2.0
         with:
           operating_system: freebsd
           architecture: x86-64
           version: '15.0'
-          run: |
-            sudo pkg update
-            sudo pkg install -y gmake fusefs-libs3
-            gmake
+      - name: Build
+        run: |
+          sudo pkg update
+          sudo pkg install -y gmake fusefs-libs3
+          gmake
   build-netbsd:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: cpa.sh {0}
     steps:
       - uses: actions/checkout@v7
-      - name: Build
+      - name: Start VM
         uses: cross-platform-actions/action@v1.2.0
         with:
           operating_system: netbsd
           architecture: x86-64
           version: '10.1'
-          run: |
-            sudo pkgin update
-            sudo pkgin -y install gmake fuse
-            gmake
+      - name: Build
+        run: |
+          sudo pkgin update
+          sudo pkgin -y install gmake fuse
+          gmake
