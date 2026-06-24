@@ -37,7 +37,7 @@ jobs:
         with:
           operating_system: freebsd
           architecture: x86-64
-          version: '15.0'
+          version: '15.1'
       - name: Build
         run: |
           sudo pkg update
